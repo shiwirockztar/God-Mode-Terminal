@@ -52,7 +52,7 @@ if [ -n "$ASSET_URL" ] && [ "$ASSET_URL" != "null" ]; then
   BIN=$(find "$tmpdir" -type f -name 'yazi' -perm /111 | head -n1 || true)
 
   if [ -n "$BIN" ]; then
-    install -m755 "$BIN" /usr/local/bin/yazi
+    sudo install -m755 "$BIN" /usr/local/bin/yazi
     echo "✅ Yazi instalado desde binario en /usr/local/bin/yazi"
     rm -rf "$tmpdir"
     exit 0
@@ -76,7 +76,7 @@ cargo install yazi-fm yazi-cli || true
 
 # Hacer yazi accesible globalmente
 if [ -x "$USER_HOME/.cargo/bin/yazi" ]; then
-  install -m755 "$USER_HOME/.cargo/bin/yazi" /usr/local/bin/yazi
+  sudo install -m755 "$USER_HOME/.cargo/bin/yazi" /usr/local/bin/yazi
 fi
 
 # Verificación final
