@@ -1,8 +1,7 @@
 {
   "name": "God-Mode-Terminal",
   "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu",
-  //"postCreateCommand": "bash /workspaces/God-Mode-Terminal/.devcontainer/setup-yazi.sh",
-  "postCreateCommand": "sudo bash /workspaces/God-Mode-Terminal/.devcontainer/setup-yazi.sh",
+  "postCreateCommand": "bash /workspaces/God-Mode-Terminal/.devcontainer/setup-yazi.sh",
   "remoteUser": "vscode",
   "customizations": {
     "vscode": {

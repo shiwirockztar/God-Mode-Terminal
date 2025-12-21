@@ -4,8 +4,8 @@ set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
 
 echo "▶ Instalando dependencias del sistema…"
-apt-get update
-apt-get install -y --no-install-recommends \
+sudo apt-get update
+sudo apt-get install -y --no-install-recommends \
   unzip \
   ffmpegthumbnailer \
   unar \
