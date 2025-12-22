@@ -32,3 +32,16 @@ Para aplicar estos cambios en tu Codespace actual:
 - En GitHub Codespaces: recrea el Codespace o selecciona "Rebuild Container" desde la interfaz.
 
 El script de instalación (`.devcontainer/install-yazi.sh`) queda como ayuda, pero ya no se ejecuta automáticamente al iniciar.
+
+### Versión de Yazi pineada 🔒
+
+El `Dockerfile` ahora pinnea la versión de Yazi usada en la imagen mediante los ARGs `YAZI_VERSION`, `YAZI_SHA256` y `YAZI_ASSET_NAME` (por defecto `v25.5.31` y el binario `yazi-x86_64-unknown-linux-musl.zip`). Esto asegura builds reproducibles y rápidos cuando hay un binario precompilado disponible.
+
+Si quieres actualizar la versión, edita los ARGs en `.devcontainer/Dockerfile` y reconstruye el contenedor:
+
+```sh
+# En VS Code: F1 → "Dev Containers: Rebuild Container"
+# O en GitHub Codespaces: recrea el Codespace / usa "Rebuild Container"
+```
+
+Si no hay binario compatible para la versión que elijas, el Dockerfile compila Yazi desde la fuente como fallback.

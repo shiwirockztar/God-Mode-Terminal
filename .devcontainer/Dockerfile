@@ -4,7 +4,6 @@ FROM mcr.microsoft.com/vscode/devcontainers/base:alpine
 RUN apk update && apk add --no-cache \
         unzip \
         ffmpegthumbnailer \
-        unar \
         jq \
         poppler-utils \
         fd \
@@ -17,28 +16,28 @@ RUN apk update && apk add --no-cache \
         cargo \
         build-base
 
-# Instalar Yazi (preferir binario precompilado)
+ARG YAZI_VERSION=v25.5.31
+ARG YAZI_SHA256=a2fdc9c35719fa72d94820893eb2fedd93fd1c418c2cf568702643526c358f7a
+ARG YAZI_ASSET_NAME=yazi-x86_64-unknown-linux-musl.zip
+
+# Instalar Yazi (binario precompilado verificado por checksum, fallback a compilación)
 RUN set -eux; \
     REPO="sxyazi/yazi"; \
-    ARCH="$(uname -m)"; \
-    case "$ARCH" in \
-      x86_64|amd64) arch_regex="linux.*(x86_64|amd64)";; \
-      aarch64|arm64) arch_regex="linux.*(aarch64|arm64)";; \
-      *) arch_regex="linux";; \
-    esac; \
-    ASSET_URL="$(curl -s "https://api.github.com/repos/${REPO}/releases/latest" | jq -r '.assets[] | select(.name | test("'""$arch_regex"'"")) | .browser_download_url' | head -n1)" || true; \
-    if [ -n "$ASSET_URL" ] && [ "$ASSET_URL" != "null" ]; then \
-      echo "▶ Descargando binario precompilado $ASSET_URL"; \
-      wget -qO /tmp/yazi_asset "$ASSET_URL"; \
-      if file /tmp/yazi_asset | grep -qi zip; then unzip -q /tmp/yazi_asset -d /tmp; else tar -xf /tmp/yazi_asset -C /tmp; fi; \
+    ASSET_URL="https://github.com/${REPO}/releases/download/${YAZI_VERSION}/${YAZI_ASSET_NAME}"; \
+    echo "▶ Intentando descargar ${ASSET_URL}"; \
+    if wget -qO /tmp/yazi_asset.zip "$ASSET_URL"; then \
+      echo "${YAZI_SHA256}  /tmp/yazi_asset.zip" | sha256sum -c -; \
+      unzip -q /tmp/yazi_asset.zip -d /tmp; \
       BIN="$(find /tmp -type f -name yazi -perm /111 | head -n1 || true)"; \
       if [ -n "$BIN" ]; then install -m755 "$BIN" /usr/local/bin/yazi; fi; \
+    else \
+      echo "⚠ No se pudo descargar binario precompilado, se usará compilación desde la fuente"; \
     fi; \
     if ! command -v yazi >/dev/null 2>&1; then \
-      echo "▶ No se encontró binario; compilando desde fuente..."; \
-      git clone https://github.com/sxyazi/yazi.git /tmp/yazi && cd /tmp/yazi && cargo build --release && install -m755 target/release/yazi /usr/local/bin/yazi || true; \
+      echo "▶ Compilando Yazi desde la fuente (fallback)"; \
+      git clone --depth 1 --branch "${YAZI_VERSION}" https://github.com/sxyazi/yazi.git /tmp/yazi && cd /tmp/yazi && cargo build --release && install -m755 target/release/yazi /usr/local/bin/yazi; \
     fi; \
-    rm -rf /tmp/yazi /tmp/yazi_asset
+    rm -rf /tmp/yazi /tmp/yazi_asset.zip
 
 # Verificar instalación
 RUN yazi --version
