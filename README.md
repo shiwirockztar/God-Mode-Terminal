@@ -21,3 +21,14 @@ Luego instala `yazi-fm` y `yazi-cli`:
 ```sh
 cargo install yazi-fm yazi-cli
 ```
+
+## Yazi en el Devcontainer ✅
+
+La imagen del devcontainer ahora incluye `yazi` instalado durante el build del `Dockerfile`, por lo que no es necesario instalarlo cada vez que inicias el Codespace.
+
+Para aplicar estos cambios en tu Codespace actual:
+
+- En VS Code: abre la paleta (F1) y selecciona "Dev Containers: Rebuild Container" o "Remote-Containers: Rebuild and Reopen in Container".
+- En GitHub Codespaces: recrea el Codespace o selecciona "Rebuild Container" desde la interfaz.
+
+El script de instalación (`.devcontainer/install-yazi.sh`) queda como ayuda, pero ya no se ejecuta automáticamente al iniciar.
