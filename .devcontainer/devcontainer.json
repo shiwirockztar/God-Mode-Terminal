@@ -1,7 +1,8 @@
 {
   "name": "God-Mode-Terminal",
   "build": {
-    "dockerfile": "Dockerfile"
+    "dockerfile": "Dockerfile",
+    "context": ".."
   },
   "remoteUser": "vscode",
   "customizations": {

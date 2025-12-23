@@ -41,3 +41,12 @@ RUN set -eux; \
 
 # Verificar instalación
 RUN yazi --version
+
+# Crear la estructura de configuración de Yazi
+RUN mkdir -p /root/.config/yazi && chmod -R 755 /root/.config
+
+# Copiar la configuración de Yazi desde el contexto de build
+COPY .config/ /root/.config/
+
+# Asegurar permisos correctos
+RUN chmod -R 755 /root/.config && chmod 644 /root/.config/yazi/yazi.toml 2>/dev/null || true
