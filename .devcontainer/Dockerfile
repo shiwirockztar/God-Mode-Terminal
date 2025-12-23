@@ -42,6 +42,9 @@ RUN set -eux; \
 # Verificar instalación
 RUN yazi --version
 
+# Instalar yazi-cli
+RUN cargo install yazi-cli --locked 2>/dev/null || cargo install yazi-cli || true
+
 # Crear la estructura de configuración de Yazi
 RUN mkdir -p /root/.config/yazi && chmod -R 755 /root/.config
 
